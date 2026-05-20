@@ -40,6 +40,12 @@ make_mul!(Complex<u64>);
 make_mul!(Complex<f32>);
 make_mul!(Complex<f64>);
 
+impl<T, const N : usize> ArgminMul<T, [T; N]> for [T; N] where T : ArgminMul<T, T> {
+    fn mul(&self, other: &T) -> Self {
+        std::array::from_fn(|idx| ArgminMul::mul(&self[idx], &other))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -55,6 +61,15 @@ mod tests {
                     let b = 21 as $t;
                     let res = <$t as ArgminMul<$t, $t>>::mul(&a, &b);
                     assert_relative_eq!(42 as f64, res as f64, epsilon = f64::EPSILON);
+                }
+                
+                #[test]
+                fn [<test_mul_arr_ $t>]() {
+                    let a = [21 as $t, 10 as $t];
+                    let b = 2 as $t;
+                    let res = ArgminMul::mul(&a, &b);
+                    assert_relative_eq!(42 as f64, res[0] as f64, epsilon = f64::EPSILON);
+                    assert_relative_eq!(20 as f64, res[1] as f64, epsilon = f64::EPSILON);
                 }
             }
         };
