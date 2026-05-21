@@ -41,6 +41,7 @@ make_sub!(Complex<f32>);
 make_sub!(Complex<f64>);
 
 impl<T, const N : usize> ArgminSub<[T; N], [T; N]> for [T; N] where T : ArgminSub<T, T> {
+    #[inline]
     fn sub(&self, other: &Self) -> Self {
         std::array::from_fn(|idx| ArgminSub::sub(&self[idx], &other[idx]))
     }

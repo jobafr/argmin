@@ -41,6 +41,7 @@ make_add!(Complex<f32>);
 make_add!(Complex<f64>);
 
 impl<T, const N : usize> ArgminAdd<[T; N], [T; N]> for [T; N] where T : ArgminAdd<T, T> {
+    #[inline]
     fn add(&self, other: &Self) -> Self {
         std::array::from_fn(|idx| ArgminAdd::add(&self[idx], &other[idx]))
     }
